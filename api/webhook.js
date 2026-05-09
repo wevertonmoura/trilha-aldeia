@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Método não permitido');
 
   try {
-    // A sua lógica original perfeita para pegar o ID do Mercado Pago
+    // Pegando o ID do Mercado Pago
     const paymentId = req.query.id || req.query['data.id'] || req.body?.data?.id;
     
     if (!paymentId) {
@@ -46,10 +46,10 @@ export default async function handler(req, res) {
 
         if (!erroBusca && inscricoes && inscricoes.length > 0) {
           
-          // Se ainda não estiver pago no banco, a gente atualiza e manda o e-mail
+          // Se ainda não estiver pago no banco, atualiza e manda o e-mail
           if (!inscricoes[0].pago) {
             
-            // Atualiza o banco (Sua lógica original)
+            // Atualiza o banco
             const { error: erroUpdate } = await supabase
               .from('inscricao_trilha')
               .update({ pago: true })
@@ -60,13 +60,13 @@ export default async function handler(req, res) {
             } else {
               console.log("Banco atualizado com SUCESSO para:", emailPrincipal);
               
-              // 3. Monta a lista de nomes e dispara o E-mail VIP!
+              // 3. Monta a lista de nomes e dispara o E-mail VIP
               const nomesParticipantes = inscricoes.map(p => `<li>🎟️ <strong>${p.nome}</strong></li>`).join('');
 
               const mailOptions = {
-                from: `"Vem Para Trilha" <${process.env.EMAIL_USER}>`,
+                from: `"Vem Para Trilha" <${process.env.EMAIL_USER}>`, 
                 to: emailPrincipal,
-                subject: '✅ Vaga Garantida: Vem Para Trilha!',
+                subject: '✅ Vaga Garantida: Vem Para Trilha!', 
                 html: `
                   <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
                     <div style="background-color: #10b981; padding: 20px; text-align: center;">
@@ -87,7 +87,7 @@ export default async function handler(req, res) {
                       </div>
 
                       <p style="margin-top: 25px; font-size: 14px;">Qualquer dúvida, é só nos chamar no WhatsApp do suporte: <a href="https://wa.me/5581988227739" style="color: #10b981; font-weight: bold; text-decoration: none;">(81) 98822-7739</a></p>
-                      <p>Nos vemos na trilha!<br><strong>Equipe Invasores</strong></p>
+                      <p>Nos vemos na trilha!<br><strong>Equipe Vem Para Trilha</strong></p>
                     </div>
                   </div>
                 `
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       }
     }
     
-    // A RESPOSTA VAI AQUI NO FINAL! (Exatamente como você fazia antes)
+    // A RESPOSTA PARA O MERCADO PAGO
     return res.status(200).send('Webhook processado com sucesso');
 
   } catch (error) { 
