@@ -76,12 +76,7 @@ const Trilha3Reinos = () => {
     }
   }, []);
 
- const comprarMaisIngressos = () => {
-  setParticipants([{ name: '', email: '', phone: '', cpf: '', emergencyName: '', emergencyPhone: '' }]);
-  setPaymentId(null);
-  setStatusPagamento('pendente');
-  setTelaAtual('formulario');
-};
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
