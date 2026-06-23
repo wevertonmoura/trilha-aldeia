@@ -39,8 +39,9 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     { name: '', email: '', phone: '', cpf: '', emergencyName: '', emergencyPhone: '' }
   ]);
 
+  // TIMER DO PIX OTIMIZADO (Sem memory leak)
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof setInterval> | undefined;
     if (telaAtual === 'pix' && statusPagamento === 'pendente' && tempoRestante > 0) {
       timer = setInterval(() => setTempoRestante(prev => prev - 1), 1000);
     }
@@ -53,8 +54,9 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     return `${m}:${s}`;
   };
 
+  // CHECKER DE PAGAMENTO OTIMIZADO
   useEffect(() => {
-    let intervalo: any;
+    let intervalo: ReturnType<typeof setInterval> | undefined;
     if (paymentId && statusPagamento === 'pendente' && telaAtual === 'pix') {
       intervalo = setInterval(async () => {
         try {
@@ -64,7 +66,7 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
             setStatusPagamento('pago');
             clearInterval(intervalo);
           }
-        } catch (err) { console.error(err); }
+        } catch (err) { console.error("Erro ao checar status do pix:", err); }
       }, 3000);
     }
     return () => clearInterval(intervalo);
@@ -184,7 +186,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     window.location.reload();
   };
 
-  // ESTILO PADRÃO DE ALTA RESPOSTA PARA TODOS OS INPUTS
   const inputClass = "w-full bg-zinc-950/90 border border-zinc-700/80 rounded-xl px-4 py-3 text-white font-bold text-sm outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 hover:border-zinc-500 shadow-inner";
 
   return (

@@ -8,6 +8,7 @@ import HeroSection from './components/HeroSection';
 import EventInfo from './components/EventInfo';
 import Footer from './components/Footer';
 import FormularioPrincipal from './components/FormularioPrincipal'; 
+import { formatarMoeda } from './utils/helpers'; // <-- CORREÇÃO: Importamos a função de moeda para o Admin não quebrar!
 
 const TrilhaAldeia = () => {
   const [telaAdmin, setTelaAdmin] = useState<'nao' | 'login' | 'painel'>('nao');
@@ -37,6 +38,7 @@ const TrilhaAldeia = () => {
   }, []);
 
   useEffect(() => {
+    // A porta invisível: Se o link tiver ?admin=true, abre o cofre!
     const params = new URLSearchParams(window.location.search);
     if (params.get('admin') === 'true') {
       setTelaAdmin('login'); 
@@ -88,7 +90,8 @@ const TrilhaAldeia = () => {
     );
   }
 
-  if (telaAdmin === 'painel') return <Admin senha={senhaAdmin} fecharAdmin={() => setTelaAdmin('nao')} />;
+  // CORREÇÃO: Passando a prop formatarMoeda para o Admin não dar tela branca!
+  if (telaAdmin === 'painel') return <Admin senha={senhaAdmin} formatarMoeda={formatarMoeda} fecharAdmin={() => setTelaAdmin('nao')} />;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500 overflow-x-hidden">
@@ -113,7 +116,7 @@ const TrilhaAldeia = () => {
         </div>
       </main>
 
-      {/* BOTÃO CHICLETE GLOBAL (POSICIONADO AQUI PARA GARANTIR FLUTUAÇÃO) */}
+      {/* BOTÃO CHICLETE GLOBAL */}
       <div className="fixed bottom-0 left-0 w-full bg-zinc-950/95 border-t border-zinc-800 px-5 py-3.5 z-40 md:hidden flex items-center justify-between backdrop-blur-lg shadow-[0_-15px_30px_rgba(0,0,0,0.6)]">
         <div className="flex flex-col">
           <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold">Investimento</span>
