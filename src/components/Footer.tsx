@@ -64,8 +64,8 @@ export default function Footer() {
               <a href={linkWhatsAppDireto} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
                 <WhatsappLogo className="w-4 h-4 text-emerald-500" /> (81) 98822-7739
               </a>
-              <a href="mailto:bldweverton@gmail.com" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
-                <Mail size={18} /> bldweverton@gmail.com
+              <a href="mailto:vemparatrilha5@gmail.com" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
+                <Mail size={18} /> vemparatrilha5@gmail.com
               </a>
             </div>
           </div>
