@@ -130,11 +130,11 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     let texto = "";
 
     if (pago) {
-      // TEXTO COM PLURAL AUTOMÁTICO (PAGO)
-      texto = `Fala, ${nomesParaMensagem}! Aqui é da organização do Vem Para Trilha. Passando para agradecer pela ${isPlural ? 'inscrição de vocês' : 'sua inscrição'}! A ${isPlural ? 'compra de vocês' : 'sua compra'} para a Trilha Aldeia foi CONFIRMADA com sucesso! ✅\n\nA nossa aventura já é no dia 26 de Julho! ⛰️🔥\n\nQueria pedir um favor: mandem aqui o ${isPlural ? '@ do Instagram de vocês e umas fotos bem massas' : 'seu @ do Instagram e uma foto sua bem massa'} para a gente preparar a arte de presença confirmada, beleza?\n\nAh, só para avisar: na semana da trilha vamos criar um grupo oficial no WhatsApp com todo mundo que vai participar para passar a localização exata, ponto de encontro e os últimos detalhes! Nos vemos lá! 🎒💦`;
+      // TEXTO COM PLURAL AUTOMÁTICO E INSTRUÇÕES DO GRUPO (PAGO)
+      texto = `Fala, ${nomesParaMensagem}!\n\n🚨 *ATENÇÃO, GALERA DO VEM PARA TRILHA!* 🚨\n\nA nossa aventura está chegando! É neste *domingo, dia 26/07*. ⛰️🔥\n\n📲 *PASSO OBRIGATÓRIO (GRUPO OFICIAL):*\nEntre agora no grupo oficial da trilha para receber o ponto de encontro e os horários finais:\n👉 https://chat.whatsapp.com/ISU7Dkw2riZ3B0OsVbBNYU?s=cl&p=a&ilr=4&amv=1\n\n_(Atenção: Se você comprou mais de um ingresso, mande esse link agora mesmo para o seu acompanhante entrar no grupo também!)_\n\n⚠️ *AVISO IMPORTANTE - ZERO PENETRAS:*\nFaremos uma chamada nominal e detalhada pela lista de pagantes antes de iniciar a trilha. Só fará o percurso quem estiver com o nome na lista. Por favor, *não levem pessoas sem ingresso (penetras)* para evitar constrangimentos e não passar vergonha na hora, beleza?\n\nNos vemos no domingo! Bora simbora lavar a alma! 💦🎒`;
     } else {
       // TEXTO COM PLURAL AUTOMÁTICO (PENDENTE)
-      texto = `Fala, ${nomesParaMensagem}! Vi que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a Trilha Aldeia ficou pendente. Aconteceu algum erro na hora de gerar o Pix? Se precisarem de ajuda ou preferirem fazer a transferência pela chave normal, é só me dar um alô aqui! 🚀`;
+      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura neste domingo (26/07) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
     }
 
     const mensagem = encodeURIComponent(texto);
