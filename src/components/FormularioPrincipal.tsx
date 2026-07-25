@@ -6,10 +6,13 @@ import { validarCPF, formatarMoeda } from '../utils/helpers';
 interface FormularioProps {
   vagasOcupadas: number;
   verificandoVagas: boolean;
-  LIMITE_VAGAS: number;
+  LIMITE_VAGAS?: number; // Tornamos opcional para não quebrar o arquivo pai
 }
 
-export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, LIMITE_VAGAS }: FormularioProps) {
+export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }: FormularioProps) {
+  // 🔴 TRAVA DEFINITIVA: O limite de vagas agora é forçado em 50 aqui dentro
+  const LIMITE_VAGAS_FORCADO = 50; 
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -39,7 +42,7 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     { name: '', email: '', phone: '', cpf: '', emergencyName: '', emergencyPhone: '' }
   ]);
 
-  // TIMER DO PIX OTIMIZADO (Sem memory leak)
+  // TIMER DO PIX OTIMIZADO
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
     if (telaAtual === 'pix' && statusPagamento === 'pendente' && tempoRestante > 0) {
@@ -79,7 +82,8 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
   };
 
   const addParticipant = () => {
-    if (vagasOcupadas + participants.length >= LIMITE_VAGAS) {
+    // Usando o limite forçado
+    if (vagasOcupadas + participants.length >= LIMITE_VAGAS_FORCADO) {
       alert("Atenção: Vagas insuficientes para adicionar outro acompanhante!");
       return;
     }
@@ -100,7 +104,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     setParticipants(newParticipants);
   };
 
-  // 100% SILENCIOSA: Salva no Supabase e dá o feedback visual sem abrir o zap
   const handleListaEspera = async (e: React.FormEvent) => {
     e.preventDefault();
     if (listaEsperaNome.trim().length < 3 || listaEsperaFone.length < 14) {
@@ -126,7 +129,8 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
     e.preventDefault();
     if (loading) return;
 
-    if (vagasOcupadas + participants.length > LIMITE_VAGAS) {
+    // Usando o limite forçado
+    if (vagasOcupadas + participants.length > LIMITE_VAGAS_FORCADO) {
       setErrorMsg(`Infelizmente não temos vagas suficientes disponíveis agora.`);
       return;
     }
@@ -212,7 +216,8 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
       ) : 
       
       /* ESTADO 2: VAGAS ESGOTADAS -> LISTA DE ESPERA VIP */
-      vagasOcupadas >= LIMITE_VAGAS && telaAtual === 'formulario' ? (
+      /* Usando LIMITE_VAGAS_FORCADO para garantir o bloqueio */
+      vagasOcupadas >= LIMITE_VAGAS_FORCADO && telaAtual === 'formulario' ? (
         <div className="animate-in fade-in zoom-in duration-500">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
@@ -315,8 +320,8 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas, L
               </div>
             ))}
             
-            {/* BOTÃO DA CASADINHA TURBINADO */}
-            {vagasOcupadas + participants.length < LIMITE_VAGAS && (
+            {/* Usando o limite forçado */}
+            {vagasOcupadas + participants.length < LIMITE_VAGAS_FORCADO && (
               <motion.button 
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
