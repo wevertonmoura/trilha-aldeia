@@ -170,9 +170,9 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     document.body.removeChild(link);
   };
 
-  // --- Exportações Reais ---
+  // --- Exportações Reais (APENAS PAGOS) ---
   const exportarPlanilha = () => { 
-    // Lista SOS: Somente confirmados (pago = true)
+    // Lista SOS: Somente confirmados (pago = true) - Versão Simplificada
     const confirmados = adminData.filter(p => p.pago);
     
     if (confirmados.length === 0) {
@@ -192,9 +192,11 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
   };
 
   const exportarPlanilhaCompleta = () => { 
-    // Lista Completa: Todo mundo (Pagos e Pendentes) com todos os dados
-    if (adminData.length === 0) {
-      alert("Não há inscritos na base de dados para exportar.");
+    // Lista Completa: Somente confirmados (pago = true) - Versão Detalhada
+    const confirmados = adminData.filter(p => p.pago);
+
+    if (confirmados.length === 0) {
+      alert("Nenhum inscrito confirmado para exportar.");
       return;
     }
 
@@ -202,13 +204,12 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
       ["NOME COMPLETO", "CPF", "TELEFONE", "STATUS PAGAMENTO", "DATA INSCRICAO"] // Cabeçalho
     ];
 
-    adminData.forEach(p => {
+    confirmados.forEach(p => {
       const dataFormatada = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : "";
-      const status = p.pago ? "PAGO" : "PENDENTE";
-      linhas.push([p.nome || "", p.cpf || "", p.telefone || "", status, dataFormatada]);
+      linhas.push([p.nome || "", p.cpf || "", p.telefone || "", "PAGO", dataFormatada]);
     });
 
-    baixarCSV(linhas, "Trilha_Aldeia_Inscritos_Completos");
+    baixarCSV(linhas, "Trilha_Aldeia_Confirmados_Detalhada");
   };
 
   // Cálculos Financeiros (Somente da aba de inscritos oficiais)
