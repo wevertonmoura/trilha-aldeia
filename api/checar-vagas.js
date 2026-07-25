@@ -5,6 +5,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
+const LIMITE_VAGAS = 50; // Trava rígida no backend
+
 export default async function handler(req, res) {
   try {
     const { count, error } = await supabase
@@ -14,7 +16,14 @@ export default async function handler(req, res) {
 
     if (error) throw error;
 
-    res.status(200).json({ total: count || 0 });
+    const totalOcupadas = count || 0;
+    const esgotado = totalOcupadas >= LIMITE_VAGAS;
+
+    res.status(200).json({ 
+        total: totalOcupadas,
+        esgotado: esgotado,
+        limite: LIMITE_VAGAS
+    });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar vagas' });
   }
