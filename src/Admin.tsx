@@ -149,9 +149,67 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     window.open(`https://wa.me/${numeroFormatado}?text=${mensagem}`, '_blank');
   };
 
-  // Exportações
-  const exportarPlanilha = () => { /* Lógica futura */ };
-  const exportarPlanilhaCompleta = () => { /* Lógica futura */ };
+  // --- Função Auxiliar para Gerar e Baixar o CSV ---
+  const baixarCSV = (linhas: string[][], nomeArquivo: string) => {
+    // Adiciona o BOM (\uFEFF) para o Excel reconhecer acentos (UTF-8) perfeitamente
+    let csvContent = "\uFEFF"; 
+    
+    linhas.forEach(linhaArray => {
+      // Envolve cada campo em aspas duplas para evitar que vírgulas quebrem as colunas
+      const linha = linhaArray.map(campo => `"${String(campo).replace(/"/g, '""')}"`).join(";");
+      csvContent += linha + "\r\n";
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${nomeArquivo}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // --- Exportações Reais ---
+  const exportarPlanilha = () => { 
+    // Lista SOS: Somente confirmados (pago = true)
+    const confirmados = adminData.filter(p => p.pago);
+    
+    if (confirmados.length === 0) {
+      alert("Nenhum inscrito confirmado para gerar a Lista SOS.");
+      return;
+    }
+
+    const linhas = [
+      ["NOME COMPLETO", "TELEFONE", "STATUS"] // Cabeçalho
+    ];
+
+    confirmados.forEach(p => {
+      linhas.push([p.nome || "", p.telefone || "", "CONFIRMADO"]);
+    });
+
+    baixarCSV(linhas, "Trilha_Aldeia_Lista_SOS");
+  };
+
+  const exportarPlanilhaCompleta = () => { 
+    // Lista Completa: Todo mundo (Pagos e Pendentes) com todos os dados
+    if (adminData.length === 0) {
+      alert("Não há inscritos na base de dados para exportar.");
+      return;
+    }
+
+    const linhas = [
+      ["NOME COMPLETO", "CPF", "TELEFONE", "STATUS PAGAMENTO", "DATA INSCRICAO"] // Cabeçalho
+    ];
+
+    adminData.forEach(p => {
+      const dataFormatada = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : "";
+      const status = p.pago ? "PAGO" : "PENDENTE";
+      linhas.push([p.nome || "", p.cpf || "", p.telefone || "", status, dataFormatada]);
+    });
+
+    baixarCSV(linhas, "Trilha_Aldeia_Inscritos_Completos");
+  };
 
   // Cálculos Financeiros (Somente da aba de inscritos oficiais)
   const totalPagos = adminData.filter(p => p.pago).length;
