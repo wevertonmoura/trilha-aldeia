@@ -125,11 +125,6 @@ export default function EventInfo({
                   />
                 )}
 
-                {/* LOGÓTIPO MARCA DE ÁGUA NOS QUADRADOS */}
-                <div className="absolute top-2 left-2 z-10 pointer-events-none">
-                  <img src="/logo.png" alt="Logo" className="w-8 h-8 opacity-70 drop-shadow-md" />
-                </div>
-
                 <div className="absolute inset-0 bg-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
                   <Maximize2 className="text-white" size={24} />
                 </div>
