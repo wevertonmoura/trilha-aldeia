@@ -64,7 +64,7 @@ export default function EventInfo({
           <p>
             Uma fuga perfeita da cidade. A equipe{' '}
             <span className="text-white font-bold text-emerald-500">
-              INVASORES
+              VEM PARA TRILHA
             </span>{' '}
             convida você para uma imersão total na natureza da Ilha de
             Itamaracá.

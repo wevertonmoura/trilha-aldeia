@@ -15,6 +15,7 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
   return (
     <section className="relative min-h-[72vh] md:min-h-[78vh] flex items-center justify-center overflow-hidden bg-zinc-950 pt-10 pb-8 px-4">
       
+      {/* VÍDEO DE FUNDO MAIS CLARO */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <video 
           src={videoFundoFixa} 
@@ -22,9 +23,9 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
           loop 
           muted 
           playsInline
-          className="w-full h-full object-cover filter contrast-125 saturate-50 brightness-75 opacity-25 md:opacity-20" 
+          className="w-full h-full object-cover filter contrast-110 saturate-100 opacity-60 md:opacity-50" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/75 to-zinc-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/10 via-zinc-950/60 to-zinc-950" />
       </div>
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xs h-64 bg-emerald-500/15 blur-[100px] pointer-events-none z-0" />
@@ -55,14 +56,14 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
           </div>
         </motion.div>
 
-        <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase leading-none text-white mb-2">
+        <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase leading-none text-white mb-2 drop-shadow-xl">
           Trilha <br /> 
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 drop-shadow-lg">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-emerald-500 drop-shadow-lg">
             Itamaracá
           </span>
         </h1>
 
-        <p className="text-zinc-300 font-medium text-xs md:text-sm flex items-center justify-center gap-1.5 mb-6 tracking-wide">
+        <p className="text-zinc-200 font-medium text-xs md:text-sm flex items-center justify-center gap-1.5 mb-6 tracking-wide drop-shadow-md">
           <MapPin size={15} className="text-emerald-500" /> Engenho Amparo, Itamaracá - PE
         </p>
 

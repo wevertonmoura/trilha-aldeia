@@ -33,7 +33,7 @@ export default function Footer() {
     'https://chat.whatsapp.com/H5DWJOz0wcC2PntYSq1t8y';
 
   const linkInstagram =
-    'https://www.instagram.com/vempara_trilha?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
+    'https://www.instagram.com/vempratrilha01?psln=ZnYwdWJ4ZTV4b2Rq';
 
   const linkWhatsAppDireto =
     'https://wa.me/5581988227739?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Trilha%20Engenho%20Amparo.';
@@ -91,7 +91,7 @@ export default function Footer() {
                   size={16}
                   className="text-emerald-600"
                 />
-                Horário a confirmar
+                05h00 • Saída Derby
               </p>
 
             </div>
