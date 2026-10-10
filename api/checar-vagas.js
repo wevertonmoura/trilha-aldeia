@@ -9,20 +9,18 @@ const LIMITE_VAGAS = 50; // Trava rígida no backend
 
 export default async function handler(req, res) {
   try {
-    // 🚨 TRAVA DE EMERGÊNCIA ATIVADA
-    // Consulta ao banco temporariamente desativada para forçar o esgotamento
-    /*
+    // 1. TRAVA DESATIVADA: O sistema volta a contar as vagas reais no banco.
+    // 2. CORREÇÃO: Lendo da tabela 'participantes' (que é a tabela atual)
     const { count, error } = await supabase
-      .from('inscricao_trilha')
+      .from('participantes')
       .select('*', { count: 'exact', head: true })
-      .eq('pago', true);
+      .eq('pago', true); // Conta apenas quem já está com status pago = true
 
     if (error) throw error;
-    */
 
-    // Forçando os valores de bloqueio:
-    const totalOcupadas = LIMITE_VAGAS; 
-    const esgotado = true;
+    // O total agora é o número real que vem do banco de dados
+    const totalOcupadas = count || 0; 
+    const esgotado = totalOcupadas >= LIMITE_VAGAS;
 
     res.status(200).json({ 
         total: totalOcupadas,
@@ -30,6 +28,7 @@ export default async function handler(req, res) {
         limite: LIMITE_VAGAS
     });
   } catch (error) {
+    console.error("Erro ao buscar vagas:", error);
     res.status(500).json({ error: 'Erro ao buscar vagas' });
   }
 }

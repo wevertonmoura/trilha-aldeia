@@ -1,4 +1,4 @@
-import { Clock, Check, MessageCircle, Loader2, Trash2, Edit2, AlertCircle, Search } from 'lucide-react';
+import { Clock, Check, MessageCircle, Loader2, Trash2, Edit2, AlertCircle, Search, Bus, Car } from 'lucide-react';
 
 export default function AdminTabela({
   dadosFiltrados, editId, editData, setEditData, setEditId,
@@ -40,9 +40,20 @@ export default function AdminTabela({
                   <>
                     <div className="font-black text-white text-base tracking-tight mb-1 group-hover:text-emerald-400 transition-colors">{p.nome || 'N/A'}</div>
                     <div className="flex flex-col gap-2 items-start">
-                      <span className="text-[10px] bg-zinc-950 text-zinc-500 px-2 py-1 rounded font-mono uppercase border border-zinc-800">
-                        {p.cpf ? `CPF: ${p.cpf}` : 'CPF Pendente'}
-                      </span>
+                      <div className="flex gap-2 items-center flex-wrap">
+                        <span className="text-[10px] bg-zinc-950 text-zinc-500 px-2 py-1 rounded font-mono uppercase border border-zinc-800">
+                          {p.cpf ? `CPF: ${p.cpf}` : 'CPF Pendente'}
+                        </span>
+                        
+                        {/* SELO DE TRANSPORTE */}
+                        {p.transporte && (
+                          <span className={`text-[10px] px-2 py-1 rounded uppercase border font-bold flex items-center gap-1 ${p.transporte.includes('Próprio') ? 'bg-zinc-800/50 text-zinc-400 border-zinc-700' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
+                            {p.transporte.includes('Próprio') ? <Car size={12}/> : <Bus size={12}/>}
+                            {p.transporte}
+                          </span>
+                        )}
+                      </div>
+
                       {p.created_at && (
                         <span className="text-[10px] text-zinc-500 flex items-center gap-1 font-bold uppercase tracking-widest mt-1">
                           <Clock size={12} className="text-emerald-500/50" />

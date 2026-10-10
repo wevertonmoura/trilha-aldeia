@@ -16,11 +16,12 @@ const transporter = nodemailer.createTransport({
 
 export default async function handler(req, res) {
   try {
-    // 1. Busca inscrições não pagas, criadas há mais de 25 minutos e menos de 2 horas
+    // 1. Busca inscrições não pagas, criadas há mais de 25 minutos
     const tempoLimite = new Date(Date.now() - 25 * 60 * 1000).toISOString();
     
+    // CORREÇÃO: Trocado de 'inscricao_trilha' para 'participantes'
     const { data: pendentes, error } = await supabase
-      .from('inscricao_trilha')
+      .from('participantes')
       .select('*')
       .eq('pago', false)
       .eq('lembrete_enviado', false)
@@ -40,11 +41,11 @@ export default async function handler(req, res) {
       const mailOptions = {
         from: `"Vem Para Trilha" <${process.env.EMAIL_USER}>`,
         to: inscrito.email,
-        subject: '⚠️ Sua vaga na Trilha Aldeia está esperando!',
+        subject: '⚠️ Sua vaga na Trilha Itamaracá está esperando!',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; padding: 20px;">
             <h2 style="color: #10b981;">Olá, ${inscrito.nome}!</h2>
-            <p>Vimos que você iniciou sua inscrição para a <strong>Trilha Aldeia</strong>, mas o PIX expirou antes da confirmação.</p>
+            <p>Vimos que você iniciou sua inscrição para a <strong>Trilha Itamaracá</strong>, mas o PIX expirou antes da confirmação.</p>
             <p>As vagas são limitadas e estão acabando rápido! Não queremos que você fique de fora dessa imersão na natureza.</p>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -60,8 +61,9 @@ export default async function handler(req, res) {
       await transporter.sendMail(mailOptions);
 
       // 3. Marca no banco que o lembrete foi enviado
+      // CORREÇÃO: Trocado de 'inscricao_trilha' para 'participantes'
       await supabase
-        .from('inscricao_trilha')
+        .from('participantes')
         .update({ lembrete_enviado: true })
         .eq('id', inscrito.id);
     }

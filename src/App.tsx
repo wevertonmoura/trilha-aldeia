@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { X, Lock, ArrowLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// IMPORTAÇÕES
 import Admin from './Admin';
 import HeroSection from './components/HeroSection';
 import EventInfo from './components/EventInfo';
 import Footer from './components/Footer';
 import FormularioPrincipal from './components/FormularioPrincipal'; 
-import { formatarMoeda } from './utils/helpers'; // <-- CORREÇÃO: Importamos a função de moeda para o Admin não quebrar!
+import { formatarMoeda } from './utils/helpers'; 
 
-const TrilhaAldeia = () => {
+const TrilhaItamaraca = () => {
   const [telaAdmin, setTelaAdmin] = useState<'nao' | 'login' | 'painel'>('nao');
   const [senhaAdmin, setSenhaAdmin] = useState('');
   const [erroLoginAdmin, setErroLoginAdmin] = useState('');
@@ -19,8 +18,10 @@ const TrilhaAldeia = () => {
   const [vagasOcupadas, setVagasOcupadas] = useState(0);
   const [verificandoVagas, setVerificandoVagas] = useState(true);
   
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
-  const images = ["/foto1.jpg", "/foto2.jpg", "/foto3.jpg", "/foto4.jpg"];
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+  
+  // CORREÇÃO: Agora são 4 vídeos!
+  const midias = ["/video1.mp4", "/video2.mp4", "/video3.mp4", "/video4.mp4"];
 
   useEffect(() => {
     const fetchVagas = async () => {
@@ -38,7 +39,6 @@ const TrilhaAldeia = () => {
   }, []);
 
   useEffect(() => {
-    // A porta invisível: Se o link tiver ?admin=true, abre o cofre!
     const params = new URLSearchParams(window.location.search);
     if (params.get('admin') === 'true') {
       setTelaAdmin('login'); 
@@ -90,39 +90,48 @@ const TrilhaAldeia = () => {
     );
   }
 
-  // CORREÇÃO: Passando a prop formatarMoeda para o Admin não dar tela branca!
   if (telaAdmin === 'painel') return <Admin senha={senhaAdmin} formatarMoeda={formatarMoeda} fecharAdmin={() => setTelaAdmin('nao')} />;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500 overflow-x-hidden">
       
       <AnimatePresence>
-        {selectedImg && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 cursor-pointer" onClick={() => setSelectedImg(null)}>
-            <button className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all"><X size={32}/></button>
-            <motion.img initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedImg} className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain" />
+        {selectedMedia && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 cursor-pointer" onClick={() => setSelectedMedia(null)}>
+            <button className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all z-50"><X size={32}/></button>
+            
+            <div className="relative">
+              {/* LOGÓTIPO NO VÍDEO ABERTO */}
+              <img src="/logo.png" alt="Vem Para Trilha" className="absolute top-4 left-4 w-12 h-12 opacity-80 drop-shadow-2xl z-10 pointer-events-none" />
+              
+              {selectedMedia.endsWith('.mp4') ? (
+                <motion.video initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedMedia} autoPlay loop playsInline className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain relative" />
+              ) : (
+                <motion.img initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedMedia} className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain relative" />
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <HeroSection vagasOcupadas={vagasOcupadas} LIMITE_VAGAS={LIMITE_VAGAS} scrollToForm={scrollToForm} images={images} />
+      <HeroSection vagasOcupadas={vagasOcupadas} LIMITE_VAGAS={LIMITE_VAGAS} scrollToForm={scrollToForm} videos={midias} />
 
       <main className="container mx-auto px-4 md:px-6 py-12 max-w-5xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          <EventInfo images={images} setSelectedImg={setSelectedImg} />
+          <EventInfo videos={midias} setSelectedMedia={setSelectedMedia} />
+          
           <div className="lg:col-span-1 mt-10 lg:mt-0">
             <FormularioPrincipal vagasOcupadas={vagasOcupadas} verificandoVagas={verificandoVagas} LIMITE_VAGAS={LIMITE_VAGAS} />
           </div>
         </div>
       </main>
 
-      {/* BOTÃO CHICLETE GLOBAL */}
       <div className="fixed bottom-0 left-0 w-full bg-zinc-950/95 border-t border-zinc-800 px-5 py-3.5 z-40 md:hidden flex items-center justify-between backdrop-blur-lg shadow-[0_-15px_30px_rgba(0,0,0,0.6)]">
         <div className="flex flex-col">
           <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold">Investimento</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl font-black text-white tracking-tight">R$ 55</span>
-            <span className="text-[10px] text-zinc-400 font-medium">/ indiv.</span>
+            <span className="text-xl font-black text-white tracking-tight">R$ 65</span>
+            <span className="text-[10px] text-zinc-400 font-medium">/ a partir</span>
           </div>
         </div>
         <a 
@@ -140,4 +149,4 @@ const TrilhaAldeia = () => {
   );
 };
 
-export default TrilhaAldeia;
+export default TrilhaItamaraca;

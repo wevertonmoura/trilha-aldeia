@@ -120,7 +120,6 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
         if (primeirosNomes.length === 2) {
           nomesParaMensagem = `${primeirosNomes[0]} e ${primeirosNomes[1]}`;
         } else {
-          // Se tiver 3 ou mais, coloca vírgulas e um "e" no final
           const ultimo = primeirosNomes.pop();
           nomesParaMensagem = `${primeirosNomes.join(', ')} e ${ultimo}`;
         }
@@ -130,11 +129,9 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     let texto = "";
 
     if (pago) {
-      // TEXTO COM PLURAL AUTOMÁTICO E INSTRUÇÕES DO GRUPO (PAGO)
-      texto = `Fala, ${nomesParaMensagem}!\n\n🚨 *ATENÇÃO, GALERA DO VEM PARA TRILHA!* 🚨\n\nA nossa aventura está chegando! É neste *domingo, dia 26/07*. ⛰️🔥\n\n📲 *PASSO OBRIGATÓRIO (GRUPO OFICIAL):*\nEntre agora no grupo oficial da trilha para receber o ponto de encontro e os horários finais:\n👉 https://chat.whatsapp.com/ISU7Dkw2riZ3B0OsVbBNYU?s=cl&p=a&ilr=4&amv=1\n\n_(Atenção: Se você comprou mais de um ingresso, mande esse link agora mesmo para o seu acompanhante entrar no grupo também!)_\n\n⚠️ *AVISO IMPORTANTE - ZERO PENETRAS:*\nFaremos uma chamada nominal e detalhada pela lista de pagantes antes de iniciar a trilha. Só fará o percurso quem estiver com o nome na lista. Por favor, *não levem pessoas sem ingresso (penetras)* para evitar constrangimentos e não passar vergonha na hora, beleza?\n\nNos vemos no domingo! Bora simbora lavar a alma! 💦🎒`;
+      texto = `Fala, ${nomesParaMensagem}!\n\n🚨 *ATENÇÃO, GALERA DO VEM PARA TRILHA!* 🚨\n\nA nossa aventura está chegando! É neste *domingo, dia 29/11*. ⛰️🔥\n\n📲 *PASSO OBRIGATÓRIO (GRUPO OFICIAL):*\nEntre agora no grupo oficial da trilha para receber o ponto de encontro e os horários finais:\n👉 https://chat.whatsapp.com/ISU7Dkw2riZ3B0OsVbBNYU?s=cl&p=a&ilr=4&amv=1\n\n_(Atenção: Se você comprou mais de um ingresso, mande esse link agora mesmo para o seu acompanhante entrar no grupo também!)_\n\n⚠️ *AVISO IMPORTANTE - ZERO PENETRAS:*\nFaremos uma chamada nominal e detalhada pela lista de pagantes antes de iniciar a trilha. Só fará o percurso quem estiver com o nome na lista. Por favor, *não levem pessoas sem ingresso (penetras)* para evitar constrangimentos e não passar vergonha na hora, beleza?\n\nNos vemos no domingo! Bora simbora lavar a alma! 💦🎒`;
     } else {
-      // TEXTO COM PLURAL AUTOMÁTICO (PENDENTE)
-      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura neste domingo (26/07) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
+      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura neste domingo (29/11) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
     }
 
     const mensagem = encodeURIComponent(texto);
@@ -145,17 +142,15 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     let numeroFormatado = (telefone || '').replace(/\D/g, ''); 
     if (numeroFormatado.length === 10 || numeroFormatado.length === 11) numeroFormatado = '55' + numeroFormatado;
     const primeiroNome = (nome || '').split(' ')[0]; 
-    const mensagem = encodeURIComponent(`Olá ${primeiroNome}! Aqui é da organização da Trilha Aldeia. Surgiu uma vaga de desistência! Você ainda tem interesse em participar?`);
+    const mensagem = encodeURIComponent(`Olá ${primeiroNome}! Aqui é da organização da Trilha Itamaracá. Surgiu uma vaga de desistência! Você ainda tem interesse em participar?`);
     window.open(`https://wa.me/${numeroFormatado}?text=${mensagem}`, '_blank');
   };
 
   // --- Função Auxiliar para Gerar e Baixar o CSV ---
   const baixarCSV = (linhas: string[][], nomeArquivo: string) => {
-    // Adiciona o BOM (\uFEFF) para o Excel reconhecer acentos (UTF-8) perfeitamente
     let csvContent = "\uFEFF"; 
     
     linhas.forEach(linhaArray => {
-      // Envolve cada campo em aspas duplas para evitar que vírgulas quebrem as colunas
       const linha = linhaArray.map(campo => `"${String(campo).replace(/"/g, '""')}"`).join(";");
       csvContent += linha + "\r\n";
     });
@@ -172,7 +167,6 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
 
   // --- Exportações Reais (APENAS PAGOS) ---
   const exportarPlanilha = () => { 
-    // Lista SOS: Somente confirmados (pago = true) - Versão Simplificada
     const confirmados = adminData.filter(p => p.pago);
     
     if (confirmados.length === 0) {
@@ -181,18 +175,17 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     }
 
     const linhas = [
-      ["NOME COMPLETO", "TELEFONE", "STATUS"] // Cabeçalho
+      ["NOME COMPLETO", "TELEFONE", "TRANSPORTE", "STATUS"] 
     ];
 
     confirmados.forEach(p => {
-      linhas.push([p.nome || "", p.telefone || "", "CONFIRMADO"]);
+      linhas.push([p.nome || "", p.telefone || "", p.transporte || "Com Transporte", "CONFIRMADO"]);
     });
 
-    baixarCSV(linhas, "Trilha_Aldeia_Lista_SOS");
+    baixarCSV(linhas, "Trilha_Itamaraca_Lista_SOS");
   };
 
   const exportarPlanilhaCompleta = () => { 
-    // Lista Completa: Somente confirmados (pago = true) - Versão Detalhada
     const confirmados = adminData.filter(p => p.pago);
 
     if (confirmados.length === 0) {
@@ -201,21 +194,46 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     }
 
     const linhas = [
-      ["NOME COMPLETO", "CPF", "TELEFONE", "STATUS PAGAMENTO", "DATA INSCRICAO"] // Cabeçalho
+      ["NOME COMPLETO", "CPF", "TELEFONE", "TRANSPORTE", "STATUS PAGAMENTO", "DATA INSCRICAO"] 
     ];
 
     confirmados.forEach(p => {
       const dataFormatada = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : "";
-      linhas.push([p.nome || "", p.cpf || "", p.telefone || "", "PAGO", dataFormatada]);
+      linhas.push([p.nome || "", p.cpf || "", p.telefone || "", p.transporte || "Com Transporte", "PAGO", dataFormatada]);
     });
 
-    baixarCSV(linhas, "Trilha_Aldeia_Confirmados_Detalhada");
+    baixarCSV(linhas, "Trilha_Itamaraca_Confirmados_Detalhada");
   };
 
-  // Cálculos Financeiros (Somente da aba de inscritos oficiais)
+  // Cálculos Financeiros Dinâmicos e de Transporte
   const totalPagos = adminData.filter(p => p.pago).length;
   const totalPendentes = adminData.length - totalPagos;
-  const arrecadado = (Math.floor(totalPagos / 2) * 100) + ((totalPagos % 2) * 55); 
+  
+  // CONTAGEM DE TRANSPORTE (Conta apenas quem já está PAGO, para garantir os assentos)
+  const totalComTransporte = adminData.filter(p => p.pago && (!p.transporte || !p.transporte.includes('Próprio'))).length;
+  const totalSemTransporte = adminData.filter(p => p.pago && p.transporte && p.transporte.includes('Próprio')).length;
+
+  let arrecadado = 0;
+  const gruposPix: any = {};
+
+  adminData.filter(p => p.pago).forEach(p => {
+    const pid = p.payment_id || `manual_${p.id}`; 
+    if (!gruposPix[pid]) {
+      gruposPix[pid] = { count: 0, transporte: p.transporte || 'Com Transporte (Derby)' };
+    }
+    gruposPix[pid].count += 1;
+  });
+
+  Object.values(gruposPix).forEach((g: any) => {
+    const pares = Math.floor(g.count / 2);
+    const avulsos = g.count % 2;
+    
+    if (g.transporte.includes('Próprio')) {
+      arrecadado += (pares * 120) + (avulsos * 65);
+    } else {
+      arrecadado += (pares * 180) + (avulsos * 95);
+    }
+  });
   
   // Filtros de Busca independentes
   const inscritosFiltrados = adminData.filter(p => (p.nome || '').toLowerCase().includes(busca.toLowerCase()) || (p.telefone || '').includes(busca));
@@ -252,6 +270,8 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
           arrecadado={arrecadado} 
           formatarMoeda={formatarMoeda} 
           totalGerado={adminData.length} 
+          totalComTransporte={totalComTransporte}
+          totalSemTransporte={totalSemTransporte}
         />
 
         {/* CONTÊINER PRINCIPAL DAS TABELAS */}

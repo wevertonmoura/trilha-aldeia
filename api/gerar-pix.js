@@ -8,13 +8,14 @@ const supabase = createClient(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Método não permitido' });
 
-  const { participantes, valorTotal, emailPrincipal, contatoEmergencia } = req.body;
+  // 1. Recebemos agora a opção de "transporte" escolhida pelo participante
+  const { participantes, valorTotal, emailPrincipal, contatoEmergencia, transporte } = req.body;
 
   try {
     const cpfTitular = participantes[0].cpf.replace(/\D/g, '');
     const telefoneTitular = participantes[0].phone.replace(/\D/g, '');
     
-    // Webhook dinâmico: lê o domínio do Vercel automaticamente
+    // O domínio já é lido automaticamente (trilha-engenho-do-amparo.vercel.app)
     const webhookUrl = `https://${req.headers.host}/api/webhook`;
 
     const payerName = participantes[0].name.trim().split(" ");
@@ -30,7 +31,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         transaction_amount: Number(valorTotal),
-        description: `Inscrição Trilha Aldeia - ${participantes[0].name}`,
+        // 2. Atualizamos o nome no comprovativo do PIX
+        description: `Inscrição Trilha Itamaracá - ${participantes[0].name}`,
         payment_method_id: 'pix',
         payer: {
           email: emailPrincipal,
@@ -61,11 +63,12 @@ export default async function handler(req, res) {
         cpf: index === 0 ? cpfLimpo : null, 
         contato_emergencia: contatoEmergencia || null,
         pago: false,
-        payment_id: idDoPagamento 
+        payment_id: idDoPagamento,
+        // 3. Guardamos a escolha do transporte no banco de dados
+        transporte: transporte || 'Com Transporte (Derby)' 
       };
     });
 
-    //CORREÇÃO: Conectando o cano na tabela certa ('participantes')
     const { error: erroInsert } = await supabase.from('participantes').insert(dadosParaSalvar);
     
     if (erroInsert) {

@@ -6,35 +6,31 @@ interface HeroProps {
   vagasOcupadas: number;
   LIMITE_VAGAS: number;
   scrollToForm: (e: React.MouseEvent) => void;
-  images: string[];
+  videos: string[];
 }
 
-export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm, images }: HeroProps) {
-  const fotoFlorestaFixa = images?.[0] || '/foto1.jpg';
+export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm, videos }: HeroProps) {
+  const videoFundoFixa = videos?.[0] || '/video1.mp4';
 
   return (
-    // 1. Reduzido para min-h-[72vh] (Puxa a descrição para cima)
-    // 2. Removida a borda inferior para "derreter" no preto
     <section className="relative min-h-[72vh] md:min-h-[78vh] flex items-center justify-center overflow-hidden bg-zinc-950 pt-10 pb-8 px-4">
       
-      {/* FUNDO DA FLORESTA */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img 
-          src={fotoFlorestaFixa} 
-          alt="Floresta ao fundo" 
+        <video 
+          src={videoFundoFixa} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
           className="w-full h-full object-cover filter contrast-125 saturate-50 brightness-75 opacity-25 md:opacity-20" 
         />
-        {/* O degradê termina em 'to-zinc-950' exato para colar com a seção de baixo */}
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/75 to-zinc-950" />
       </div>
 
-      {/* Luz neon verde atrás da Logo */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xs h-64 bg-emerald-500/15 blur-[100px] pointer-events-none z-0" />
 
-      {/* CONTEÚDO COMPACTADO (Espaçamentos verticais mais inteligentes) */}
       <div className="container mx-auto max-w-md text-center relative z-10 flex flex-col items-center">
         
-        {/* Etiqueta Superior */}
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,7 +39,6 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
           🌿 Vem Para Trilha Apresenta
         </motion.div>
 
-        {/* Logo um pouco mais compacta */}
         <motion.div 
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -60,20 +55,17 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
           </div>
         </motion.div>
 
-        {/* TÍTULO */}
         <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase leading-none text-white mb-2">
           Trilha <br /> 
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 drop-shadow-lg">
-            Aldeia
+            Itamaracá
           </span>
         </h1>
 
-        {/* Localização */}
         <p className="text-zinc-300 font-medium text-xs md:text-sm flex items-center justify-center gap-1.5 mb-6 tracking-wide">
-          <MapPin size={15} className="text-emerald-500" /> Chã da Peroba, Aldeia - PE
+          <MapPin size={15} className="text-emerald-500" /> Engenho Amparo, Itamaracá - PE
         </p>
 
-        {/* BLOCOS SLIM */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -82,21 +74,20 @@ export default function HeroSection({ vagasOcupadas, LIMITE_VAGAS, scrollToForm,
         >
           <div className="flex items-center justify-center gap-2 bg-gradient-to-b from-zinc-800/40 to-zinc-900/40 text-zinc-200 text-xs font-bold py-2.5 px-4 rounded-xl border-t border-zinc-700/50 border-x border-zinc-800/50 border-b border-zinc-900 backdrop-blur-md shadow-lg uppercase tracking-wider">
             <Calendar size={13} className="text-emerald-400" />
-            <span>26 de Julho, 2026</span>
+            <span>29 de Novembro, 2026</span>
           </div>
 
           <div className="flex items-center justify-center gap-2 bg-gradient-to-b from-emerald-900/20 to-zinc-900/40 text-emerald-400 text-xs font-black py-2.5 px-4 rounded-xl border-t border-emerald-500/30 border-x border-emerald-500/10 border-b border-zinc-900 backdrop-blur-md shadow-lg uppercase tracking-widest">
             <Footprints size={13} className="text-emerald-400" />
-            <span>13km • Ritmo Leve</span>
+            <span>12km • Nível Moderado</span>
           </div>
 
           <div className="flex items-center justify-center gap-2 bg-gradient-to-b from-amber-900/10 to-zinc-900/40 text-amber-400 text-xs font-bold py-2.5 px-4 rounded-xl border-t border-amber-500/30 border-x border-amber-500/10 border-b border-zinc-900 backdrop-blur-md shadow-lg uppercase tracking-wider">
             <Clock size={13} className="text-amber-400" />
-            <span>Saída às 07:00h</span>
+            <span>05h00 • Saída Derby</span>
           </div>
         </motion.div>
 
-        {/* BOTÃO */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

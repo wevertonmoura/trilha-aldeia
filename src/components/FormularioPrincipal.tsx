@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Loader2, AlertCircle, Plus, Trash2, Copy, QrCode, CheckCircle, Hourglass, Clock, Ticket } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronRight, Loader2, AlertCircle, Plus, Trash2, Copy, QrCode, CheckCircle, Hourglass, Clock, Ticket, Bus, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { validarCPF, formatarMoeda } from '../utils/helpers';
 
 interface FormularioProps {
   vagasOcupadas: number;
   verificandoVagas: boolean;
-  LIMITE_VAGAS?: number; // Tornamos opcional para não quebrar o arquivo pai
+  LIMITE_VAGAS?: number;
 }
 
 export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }: FormularioProps) {
-  // 🔴 TRAVA DEFINITIVA: O limite de vagas agora é forçado em 50 aqui dentro
   const LIMITE_VAGAS_FORCADO = 50; 
 
   const [loading, setLoading] = useState(false);
@@ -25,12 +24,21 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
   const [listaEsperaFone, setListaEsperaFone] = useState('');
   const [entrouLista, setEntrouLista] = useState(false);
 
+  // NOVO ESTADO: Opção de Transporte
+  const [tipoTransporte, setTipoTransporte] = useState<'com_transporte' | 'proprio'>('com_transporte');
+
   const taxaPix = 1;
   
-  const calcularValorIngressos = (qtd: number) => {
+  // NOVA LÓGICA DE CÁLCULO
+  const calcularValorIngressos = (qtd: number, transporte: 'com_transporte' | 'proprio') => {
     const pares = Math.floor(qtd / 2); 
     const avulsos = qtd % 2;          
-    return (pares * 100) + (avulsos * 55);
+    
+    if (transporte === 'com_transporte') {
+      return (pares * 180) + (avulsos * 95); // Casadinha R$180, Avulso R$95
+    } else {
+      return (pares * 120) + (avulsos * 65); // Casadinha R$120, Avulso R$65
+    }
   };
 
   const [qrCodePix, setQrCodePix] = useState(''); 
@@ -42,7 +50,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     { name: '', email: '', phone: '', cpf: '', emergencyName: '', emergencyPhone: '' }
   ]);
 
-  // TIMER DO PIX OTIMIZADO
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
     if (telaAtual === 'pix' && statusPagamento === 'pendente' && tempoRestante > 0) {
@@ -57,7 +64,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     return `${m}:${s}`;
   };
 
-  // CHECKER DE PAGAMENTO OTIMIZADO
   useEffect(() => {
     let intervalo: ReturnType<typeof setInterval> | undefined;
     if (paymentId && statusPagamento === 'pendente' && telaAtual === 'pix') {
@@ -82,7 +88,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
   };
 
   const addParticipant = () => {
-    // Usando o limite forçado
     if (vagasOcupadas + participants.length >= LIMITE_VAGAS_FORCADO) {
       alert("Atenção: Vagas insuficientes para adicionar outro acompanhante!");
       return;
@@ -129,7 +134,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     e.preventDefault();
     if (loading) return;
 
-    // Usando o limite forçado
     if (vagasOcupadas + participants.length > LIMITE_VAGAS_FORCADO) {
       setErrorMsg(`Infelizmente não temos vagas suficientes disponíveis agora.`);
       return;
@@ -157,9 +161,9 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     setStatusPagamento('pendente');
 
     try {
-      const mainEmergency = `${participants[0].emergencyName} - ${participants[0].emergencyPhone}`;
+      const mainEmergency = `${participants[0].emergencyName}\n${participants[0].emergencyPhone}`;
       const mainEmail = participants[0].email;
-      const valorTotal = Number((calcularValorIngressos(participants.length) + taxaPix).toFixed(2));
+      const valorTotal = Number((calcularValorIngressos(participants.length, tipoTransporte) + taxaPix).toFixed(2));
 
       const response = await fetch('/api/gerar-pix', {
         method: 'POST',
@@ -168,7 +172,8 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
           participantes: participants,
           valorTotal: valorTotal,
           emailPrincipal: mainEmail,
-          contatoEmergencia: mainEmergency
+          contatoEmergencia: mainEmergency,
+          transporte: tipoTransporte === 'com_transporte' ? 'Com Transporte (Derby)' : 'Transporte Próprio' // Enviando a escolha para o backend
         })
       });
 
@@ -207,7 +212,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
   return (
     <section id="inscricao" className="lg:sticky lg:top-8 bg-zinc-900/90 backdrop-blur-md border border-zinc-700/50 rounded-[2.5rem] p-6 md:p-10 shadow-2xl">
       
-      {/* ESTADO 1: VERIFICANDO VAGAS */}
       {verificandoVagas ? (
         <div className="flex flex-col items-center justify-center py-20 opacity-50">
           <Loader2 className="animate-spin text-emerald-500 mb-4" size={40} />
@@ -215,8 +219,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
         </div>
       ) : 
       
-      /* ESTADO 2: VAGAS ESGOTADAS -> LISTA DE ESPERA VIP */
-      /* Usando LIMITE_VAGAS_FORCADO para garantir o bloqueio */
       vagasOcupadas >= LIMITE_VAGAS_FORCADO && telaAtual === 'formulario' ? (
         <div className="animate-in fade-in zoom-in duration-500">
           <div className="text-center mb-8">
@@ -259,15 +261,45 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
         </div>
       ) : 
       
-      /* ESTADO 3: FORMULÁRIO NORMAL DE COMPRA */
       telaAtual === 'formulario' ? (
         <>
           <div className="text-center mb-10 relative">
             <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white">INSCRIÇÃO</h2>
-            <p className="text-emerald-500 text-sm font-bold mt-1 tracking-widest">R$ 55 INDIVIDUAL | R$ 100 CASADINHA</p>
+            <p className="text-emerald-500 text-sm font-bold mt-1 tracking-widest">
+              {tipoTransporte === 'com_transporte' ? 'R$ 95 INDIV. | R$ 180 CASADINHA' : 'R$ 65 INDIV. | R$ 120 CASADINHA'}
+            </p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-8">
+            
+            {/* SELEÇÃO DE TRANSPORTE */}
+            <div className="mb-4">
+              <label className="text-[10px] font-black uppercase text-zinc-400 ml-1 mb-3 block">Opção de Transporte</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className={`cursor-pointer flex flex-col justify-between p-4 rounded-2xl border-2 transition-all ${tipoTransporte === 'com_transporte' ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'border-zinc-700/50 bg-zinc-800/40 hover:border-zinc-500'}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <input type="radio" name="transporte" checked={tipoTransporte === 'com_transporte'} onChange={() => setTipoTransporte('com_transporte')} className="hidden" />
+                    <Bus className={tipoTransporte === 'com_transporte' ? 'text-emerald-500' : 'text-zinc-500'} size={24} />
+                    <div>
+                      <p className="text-white font-bold text-sm uppercase">Com Transporte</p>
+                      <p className="text-zinc-400 text-[10px] uppercase tracking-wider">Saída do Derby</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label className={`cursor-pointer flex flex-col justify-between p-4 rounded-2xl border-2 transition-all ${tipoTransporte === 'proprio' ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'border-zinc-700/50 bg-zinc-800/40 hover:border-zinc-500'}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <input type="radio" name="transporte" checked={tipoTransporte === 'proprio'} onChange={() => setTipoTransporte('proprio')} className="hidden" />
+                    <Car className={tipoTransporte === 'proprio' ? 'text-emerald-500' : 'text-zinc-500'} size={24} />
+                    <div>
+                      <p className="text-white font-bold text-sm uppercase">Transporte Próprio</p>
+                      <p className="text-zinc-400 text-[10px] uppercase tracking-wider">Ir por conta própria</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             {participants.map((participant, index) => (
               <div key={index} className="p-6 rounded-3xl bg-zinc-800/40 border border-zinc-700/50 relative shadow-inner overflow-hidden">
                 <div className={`absolute top-0 left-0 w-1.5 h-full ${index === 0 ? 'bg-emerald-500' : 'bg-zinc-500'}`}></div>
@@ -320,7 +352,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
               </div>
             ))}
             
-            {/* Usando o limite forçado */}
             {vagasOcupadas + participants.length < LIMITE_VAGAS_FORCADO && (
               <motion.button 
                 whileHover={{ scale: 1.01 }}
@@ -349,12 +380,11 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
             {errorMsg && <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-[10px] font-bold flex items-center justify-center gap-2"><AlertCircle size={14}/> {errorMsg}</div>}
             
             <button disabled={loading} className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-5 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_45px_rgba(16,185,129,0.5)] transition-all uppercase tracking-widest flex items-center justify-center gap-3 text-sm mt-4 cursor-pointer">
-              {loading ? <Loader2 className="animate-spin text-zinc-950" /> : <>Finalizar Inscrição (R$ {formatarMoeda(calcularValorIngressos(participants.length) + taxaPix)}) <ChevronRight size={20} /></>}
+              {loading ? <Loader2 className="animate-spin text-zinc-950" /> : <>Finalizar Inscrição (R$ {formatarMoeda(calcularValorIngressos(participants.length, tipoTransporte) + taxaPix)}) <ChevronRight size={20} /></>}
             </button>
           </form>
         </>
       ) : (
-        /* ESTADO 4: TELA DO PIX OU SUCESSO */
         <div className="text-center space-y-8 animate-in fade-in zoom-in duration-500">
           {statusPagamento === 'pago' ? (
             <div className="py-2 space-y-6 flex flex-col items-center">
@@ -401,7 +431,7 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
               <div className="bg-zinc-800/40 border border-emerald-500/30 rounded-3xl p-6 shadow-inner relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
                 <p className="text-xs font-bold uppercase text-zinc-500 tracking-widest mb-2">Valor total</p>
-                <p className="text-5xl font-black text-white tracking-tighter">R$ {formatarMoeda(calcularValorIngressos(participants.length) + taxaPix)}</p>
+                <p className="text-5xl font-black text-white tracking-tighter">R$ {formatarMoeda(calcularValorIngressos(participants.length, tipoTransporte) + taxaPix)}</p>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2 bg-zinc-950 p-2 pl-4 rounded-xl border border-zinc-700/50">
