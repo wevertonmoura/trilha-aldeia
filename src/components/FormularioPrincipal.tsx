@@ -46,6 +46,13 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
   const [copiado, setCopiado] = useState(false);
   const [tempoRestante, setTempoRestante] = useState(900); 
 
+  // FUNÇÃO QUE ESTAVA FALTANDO
+  const formatarTempo = (segundos: number) => {
+    const m = Math.floor(segundos / 60).toString().padStart(2, '0');
+    const s = (segundos % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
   const [participants, setParticipants] = useState([
     { name: '', email: '', phone: '', cpf: '', emergencyName: '', emergencyPhone: '' }
   ]);
@@ -57,12 +64,6 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     }
     return () => clearInterval(timer);
   }, [telaAtual, statusPagamento, tempoRestante]);
-
-  const formatarTempo = (segundos: number) => {
-    const m = Math.floor(segundos / 60).toString().padStart(2, '0');
-    const s = (segundos % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
 
   useEffect(() => {
     let intervalo: ReturnType<typeof setInterval> | undefined;
@@ -80,6 +81,19 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     }
     return () => clearInterval(intervalo);
   }, [paymentId, statusPagamento, telaAtual]);
+
+  // NOVO: Efeito para travar a tela no QR Code ou no Sucesso
+  useEffect(() => {
+    if (telaAtual === 'pix' || statusPagamento === 'pago') {
+      setTimeout(() => {
+        const elemento = document.getElementById('inscricao');
+        if (elemento) {
+          const y = elemento.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 150);
+    }
+  }, [telaAtual, statusPagamento]);
 
   const removeParticipant = (index: number) => {
     const newParticipants = [...participants];
@@ -173,7 +187,7 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
           valorTotal: valorTotal,
           emailPrincipal: mainEmail,
           contatoEmergencia: mainEmergency,
-          transporte: tipoTransporte === 'com_transporte' ? 'Com Transporte (Derby)' : 'Transporte Próprio' // Enviando a escolha para o backend
+          transporte: tipoTransporte === 'com_transporte' ? 'Com Transporte (Derby)' : 'Transporte Próprio' 
         })
       });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Lock, ArrowLeft, ChevronRight } from 'lucide-react';
+import { X, Lock, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Admin from './Admin';
@@ -103,7 +103,6 @@ const TrilhaItamaraca = () => {
             <div className="relative">
               <img src="/logo.png" alt="Vem Para Trilha" className="absolute top-4 left-4 w-12 h-12 opacity-80 drop-shadow-2xl z-10 pointer-events-none" />
               
-              {/* SOLUÇÃO: Adicionado toLowerCase() para ignorar maiúsculas/minúsculas */}
               {selectedMedia.toLowerCase().endsWith('.mp4') ? (
                 <motion.video initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedMedia} autoPlay loop playsInline className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain relative" />
               ) : (
@@ -125,24 +124,6 @@ const TrilhaItamaraca = () => {
           </div>
         </div>
       </main>
-
-      <div className="fixed bottom-0 left-0 w-full bg-zinc-950/95 border-t border-zinc-800 px-5 py-3.5 z-40 md:hidden flex items-center justify-between backdrop-blur-lg shadow-[0_-15px_30px_rgba(0,0,0,0.6)]">
-        <div className="flex flex-col">
-          <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-bold">Investimento</span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-xl font-black text-white tracking-tight">R$ 65</span>
-            <span className="text-[10px] text-zinc-400 font-medium">/ a partir</span>
-          </div>
-        </div>
-        <a 
-          href="#inscricao"
-          onClick={scrollToForm}
-          className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs uppercase tracking-widest py-3 px-6 rounded-xl shadow-[0_0_25px_rgba(16,185,129,0.35)] flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer"
-        >
-          <span>Garantir Vaga</span>
-          <ChevronRight size={16} />
-        </a>
-      </div>
 
       <Footer />
     </div>
