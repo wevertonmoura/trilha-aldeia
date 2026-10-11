@@ -6,9 +6,11 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Configuração do Nodemailer
+// Configuração Robusta do Nodemailer para a Vercel
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // Usa SSL seguro
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -40,13 +42,10 @@ export default async function handler(req, res) {
     const mpData = await mpResponse.json();
 
     if (mpData.status === 'approved') {
-      const emailPrincipal = mpData.external_reference;
       const idDoPagamentoString = paymentId.toString(); 
       
-      console.log(`✅ Pagamento APROVADO para: ${emailPrincipal}`);
-
       if (idDoPagamentoString) {
-        // CORREÇÃO: Ajustado para procurar na tabela correta ('participantes')
+        // 1. Busca os dados PRIMEIRO na base de dados
         const { data: inscricoes, error: erroBusca } = await supabase
           .from('participantes')
           .select('*')
@@ -54,11 +53,15 @@ export default async function handler(req, res) {
 
         if (!erroBusca && inscricoes && inscricoes.length > 0) {
           
+          // 2. Pega o e-mail com segurança diretamente do Supabase (ou fallback para o MP)
+          const emailDestino = inscricoes[0].email || mpData.external_reference;
+          
+          console.log(`✅ Pagamento APROVADO! Preparando para enviar e-mail para: ${emailDestino}`);
+
           if (!inscricoes[0].pago) {
             
             console.log(`📝 Atualizando ${inscricoes.length} inscritos deste pagamento...`);
 
-            // CORREÇÃO: Mantido na tabela correta ('participantes')
             const { error: erroUpdate } = await supabase
               .from('participantes')
               .update({ pago: true })
@@ -69,11 +72,16 @@ export default async function handler(req, res) {
             } else {
               console.log("🚀 Banco de dados atualizado com SUCESSO!");
               
-              const nomesParticipantes = inscricoes.map(p => `<li style="margin-bottom: 8px;">🎟️ <strong>${p.nome}</strong> ${p.transporte ? `<span style="font-size: 13px; color: #6b7280;">(${p.transporte})</span>` : ''}</li>`).join('');
+              if (!emailDestino) {
+                console.error("❌ ERRO: E-mail de destino está vazio. Impossível enviar mensagem.");
+                return res.status(200).send('Atualizado, mas sem e-mail');
+              }
+
+              const nomesParticipantes = inscricoes.map(p => `<li style="margin-bottom: 8px;">🎟️ <strong>${p.nome || p.name}</strong> ${p.transporte ? `<span style="font-size: 13px; color: #6b7280;">(${p.transporte})</span>` : ''}</li>`).join('');
 
               const mailOptions = {
                 from: `"Vem Para Trilha" <${process.env.EMAIL_USER}>`, 
-                to: emailPrincipal,
+                to: emailDestino,
                 subject: '🎉 Compra Confirmada: Sua vaga na trilha está garantida!', 
                 html: `
                   <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
@@ -116,15 +124,18 @@ export default async function handler(req, res) {
               };
 
               try {
+                  console.log("Tentando enviar e-mail pelo Nodemailer...");
                   await transporter.sendMail(mailOptions);
-                  console.log("📧 E-mail enviado com sucesso.");
+                  console.log("✅ 📧 E-mail ENVIADO com sucesso para:", emailDestino);
               } catch (eMailError) {
-                  console.error("⚠️ Erro ao enviar e-mail:", eMailError);
+                  console.error("⚠️ Erro crítico ao enviar e-mail:", eMailError);
               }
             }
           } else {
               console.log("ℹ️ Esta transação já estava marcada como paga.");
           }
+        } else {
+          console.error("❌ O ID do pagamento não foi encontrado na tabela 'participantes'.");
         }
       }
     }
