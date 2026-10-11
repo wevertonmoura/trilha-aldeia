@@ -30,8 +30,8 @@ export default async function handler(req, res) {
         'X-Idempotency-Key': `pix-${Date.now()}-${cpfTitular}` 
       },
       body: JSON.stringify({
-        transaction_amount: Number(valorTotal),
-       // transaction_amount: 1.00, // VALOR FIXO DE TESTE
+       // transaction_amount: Number(valorTotal),
+        transaction_amount: 1.00, // VALOR FIXO DE TESTE
         // 2. Atualizamos o nome no comprovativo do PIX
         description: `Inscrição Trilha Itamaracá - ${participantes[0].name}`,
         payment_method_id: 'pix',
