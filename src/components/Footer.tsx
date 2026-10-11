@@ -378,24 +378,23 @@ export default function Footer() {
                   <>
                     <p>
                       <strong>
-                        1. REGRA GERAL DE DESISTÊNCIA
+                        1. POLÍTICA DE NÃO REEMBOLSO
                       </strong>
                       <br />
-                      O participante deverá observar as regras aplicáveis
-                      ao cancelamento de sua inscrição e poderá entrar em
-                      contato com a organização pelo WhatsApp para solicitar
-                      informações sobre sua situação específica.
+                      Informamos que <strong className="text-red-400">não haverá reembolso</strong> em caso de desistência. 
+                      Os valores arrecadados com as inscrições são imediatamente destinados e comprometidos com os custos 
+                      logísticos do evento, incluindo a contratação do <strong className="text-white">transporte fretado</strong>, 
+                      confecção das <strong className="text-white">medalhas</strong> e demais despesas de <strong className="text-white">organização</strong>.
                     </p>
 
                     <p>
                       <strong>
-                        2. TRANSFERÊNCIA DE VAGA
+                        2. TRANSFERÊNCIA DE VAGA (REPASSE)
                       </strong>
                       <br />
-                      Caso o participante não possa comparecer, recomenda-se
-                      entrar em contato com a organização com antecedência
-                      para verificar a possibilidade de transferência da
-                      vaga para outra pessoa.
+                      Caso você não possa comparecer ao evento, é permitida a transferência da sua vaga para outra pessoa. 
+                      Recomendamos entrar em contato com a organização através do WhatsApp oficial com antecedência para 
+                      atualizar os dados do novo participante na lista.
                     </p>
 
                     <p>
@@ -403,21 +402,18 @@ export default function Footer() {
                         3. ALTERAÇÕES E ADIAMENTO
                       </strong>
                       <br />
-                      Caso circunstâncias excepcionais impeçam a realização
-                      segura da trilha, a organização poderá alterar ou
-                      adiar a atividade, comunicando os participantes pelos
-                      canais oficiais.
+                      Caso circunstâncias excepcionais (como condições climáticas extremas ou motivos de força maior) 
+                      impeçam a realização segura da trilha, a organização poderá adiar a atividade, comunicando todos os 
+                      participantes pelos canais oficiais. Os ingressos continuarão válidos para a nova data estipulada.
                     </p>
 
                     <p>
                       <strong>
-                        4. DÚVIDAS SOBRE CANCELAMENTO
+                        4. DÚVIDAS
                       </strong>
                       <br />
-                      Para informações específicas sobre cancelamento,
-                      reembolso ou transferência de inscrição, entre em
-                      contato diretamente com a organização pelo WhatsApp
-                      oficial.
+                      Para quaisquer outras dúvidas sobre inscrições ou repasse de vaga, entre em
+                      contato diretamente com a equipe de organização pelo WhatsApp oficial: (81) 98822-7739.
                     </p>
                   </>
                 )}
