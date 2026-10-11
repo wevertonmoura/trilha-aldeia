@@ -20,8 +20,8 @@ const TrilhaItamaraca = () => {
   
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   
-  // CORREÇÃO: Agora são 4 vídeos!
-  const midias = ["/video1.mp4", "/video2.mp4", "/video3.mp4", "/video4.mp4"];
+  // SOLUÇÃO: Colocámos ".MP4" em maiúsculas para bater certo com o servidor!
+  const midias = ["/video1.mp4", "/video2.mp4", "/video3.mp4", "/video4.MP4"];
 
   useEffect(() => {
     const fetchVagas = async () => {
@@ -101,10 +101,10 @@ const TrilhaItamaraca = () => {
             <button className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all z-50"><X size={32}/></button>
             
             <div className="relative">
-              {/* LOGÓTIPO NO VÍDEO ABERTO */}
               <img src="/logo.png" alt="Vem Para Trilha" className="absolute top-4 left-4 w-12 h-12 opacity-80 drop-shadow-2xl z-10 pointer-events-none" />
               
-              {selectedMedia.endsWith('.mp4') ? (
+              {/* SOLUÇÃO: Adicionado toLowerCase() para ignorar maiúsculas/minúsculas */}
+              {selectedMedia.toLowerCase().endsWith('.mp4') ? (
                 <motion.video initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedMedia} autoPlay loop playsInline className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain relative" />
               ) : (
                 <motion.img initial={{ scale: 0.9 }} animate={{ scale: 1 }} src={selectedMedia} className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain relative" />

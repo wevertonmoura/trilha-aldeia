@@ -108,7 +108,8 @@ export default function EventInfo({
                 className="relative aspect-square rounded-2xl overflow-hidden cursor-pointer group shadow-lg border border-zinc-900 bg-zinc-800"
                 onClick={() => setSelectedMedia(midia)}
               >
-                {midia.endsWith('.mp4') ? (
+                {/* SOLUÇÃO: Adicionado toLowerCase() para ignorar maiúsculas/minúsculas */}
+                {midia.toLowerCase().endsWith('.mp4') ? (
                   <video
                     src={midia}
                     autoPlay
