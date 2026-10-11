@@ -46,9 +46,9 @@ export default async function handler(req, res) {
       console.log(`✅ Pagamento APROVADO para: ${emailPrincipal}`);
 
       if (idDoPagamentoString) {
-        // CORREÇÃO: Atualizado de 'participantes' para 'inscricao_trilha'
+        // CORREÇÃO: Ajustado para procurar na tabela correta ('participantes')
         const { data: inscricoes, error: erroBusca } = await supabase
-          .from('inscricao_trilha')
+          .from('participantes')
           .select('*')
           .eq('payment_id', idDoPagamentoString);
 
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
             
             console.log(`📝 Atualizando ${inscricoes.length} inscritos deste pagamento...`);
 
-            // CORREÇÃO: Atualizado de 'participantes' para 'inscricao_trilha'
+            // CORREÇÃO: Mantido na tabela correta ('participantes')
             const { error: erroUpdate } = await supabase
               .from('participantes')
               .update({ pago: true })
