@@ -100,17 +100,20 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     finally { setExcluindoId(null); }
   };
 
-  // --- Acionamentos de WhatsApp Turbinados (Com Inteligência de Casadinha) ---
+  // --- Acionamentos de WhatsApp Turbinados (Com Inteligência de Casadinha e Nova Mensagem) ---
   const chamarNoWhatsApp = (telefone: string, nome: string, pago: boolean) => {
     let numeroFormatado = (telefone || '').replace(/\D/g, ''); 
     if (numeroFormatado.length === 10 || numeroFormatado.length === 11) numeroFormatado = '55' + numeroFormatado;
     
-    // 1. Busca o participante clicado na memória para descobrir o código do Pix dele
+    // 1. Busca o participante clicado
     const participanteClicado = adminData.find(p => p.telefone === telefone && p.nome === nome);
     let nomesParaMensagem = (nome || '').split(' ')[0];
     let isPlural = false;
+    
+    // Pega o tipo de ingresso do participante (transporte)
+    let tipoIngresso = participanteClicado?.transporte || 'Ingresso Padrão';
 
-    // 2. Se achar o Pix dele, vasculha quem mais pagou junto no mesmo Pix
+    // 2. Se achar o Pix dele, vasculha quem mais pagou junto
     if (participanteClicado && participanteClicado.payment_id) {
       const grupoDoPix = adminData.filter(p => p.payment_id === participanteClicado.payment_id);
       const primeirosNomes = grupoDoPix.map(p => p.nome.split(' ')[0]);
@@ -123,15 +126,18 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
           const ultimo = primeirosNomes.pop();
           nomesParaMensagem = `${primeirosNomes.join(', ')} e ${ultimo}`;
         }
+        
+        // Formata os tipos de ingressos se for mais de uma pessoa
+        tipoIngresso = grupoDoPix.map(p => `${p.nome.split(' ')[0]} (${p.transporte || 'Padrão'})`).join(' | ');
       }
     }
 
     let texto = "";
 
     if (pago) {
-      texto = `Fala, ${nomesParaMensagem}!\n\n🚨 *ATENÇÃO, GALERA DO VEM PARA TRILHA!* 🚨\n\nA nossa aventura está chegando! É neste *domingo, dia 29/11*. ⛰️🔥\n\n📲 *PASSO OBRIGATÓRIO (GRUPO OFICIAL):*\nEntre agora no grupo oficial da trilha para receber o ponto de encontro e os horários finais:\n👉 https://chat.whatsapp.com/ISU7Dkw2riZ3B0OsVbBNYU?s=cl&p=a&ilr=4&amv=1\n\n_(Atenção: Se você comprou mais de um ingresso, mande esse link agora mesmo para o seu acompanhante entrar no grupo também!)_\n\n⚠️ *AVISO IMPORTANTE - ZERO PENETRAS:*\nFaremos uma chamada nominal e detalhada pela lista de pagantes antes de iniciar a trilha. Só fará o percurso quem estiver com o nome na lista. Por favor, *não levem pessoas sem ingresso (penetras)* para evitar constrangimentos e não passar vergonha na hora, beleza?\n\nNos vemos no domingo! Bora simbora lavar a alma! 💦🎒`;
+      texto = `Fala, ${nomesParaMensagem}! Tudo bem? 🥾🌲\n\nO pagamento foi aprovado com sucesso e a ${isPlural ? 'vaga de vocês está' : 'sua vaga está'} 100% garantida na *Trilha Engenho Amparo*! ✅\n\n🎟️ *${isPlural ? 'Ingressos' : 'Ingresso'}:*\n${tipoIngresso}\n\n📸 *Queremos fazer o seu banner!*\nPara criarmos o card oficial de "Presença Confirmada" e postar no nosso Instagram, por favor, envie por aqui:\n- Uma foto bem legal (de preferência estilo aventureiro/natureza)\n- O @ do Instagram\n_${isPlural ? '(Como são várias pessoas, mande a foto e o @ de todo mundo, por favor!)' : ''}_\n\n📱 *Sobre o Grupo da Trilha:*\nAinda não criámos o grupo oficial. Mais perto da data do evento, vamos criar um grupo no WhatsApp com todos os confirmados para passar os detalhes finais, horários, o que levar e tirar todas as dúvidas. Pode ficar tranquilo(a) que enviaremos o link de acesso aqui mesmo!\n\nPreparem-se para uma experiência incrível!\nUm grande abraço,\n*Equipe Vem Para Trilha*`;
     } else {
-      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura neste domingo (29/11) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
+      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura na Trilha Engenho Amparo (29/11) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
     }
 
     const mensagem = encodeURIComponent(texto);
@@ -142,7 +148,7 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     let numeroFormatado = (telefone || '').replace(/\D/g, ''); 
     if (numeroFormatado.length === 10 || numeroFormatado.length === 11) numeroFormatado = '55' + numeroFormatado;
     const primeiroNome = (nome || '').split(' ')[0]; 
-    const mensagem = encodeURIComponent(`Olá ${primeiroNome}! Aqui é da organização da Trilha Itamaracá. Surgiu uma vaga de desistência! Você ainda tem interesse em participar?`);
+    const mensagem = encodeURIComponent(`Olá ${primeiroNome}! Aqui é da organização da Trilha Engenho Amparo. Surgiu uma vaga de desistência! Você ainda tem interesse em participar?`);
     window.open(`https://wa.me/${numeroFormatado}?text=${mensagem}`, '_blank');
   };
 
@@ -182,7 +188,7 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
       linhas.push([p.nome || "", p.telefone || "", p.transporte || "Com Transporte", "CONFIRMADO"]);
     });
 
-    baixarCSV(linhas, "Trilha_Itamaraca_Lista_SOS");
+    baixarCSV(linhas, "Trilha_Engenho_Amparo_Lista_SOS");
   };
 
   const exportarPlanilhaCompleta = () => { 
@@ -202,7 +208,7 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
       linhas.push([p.nome || "", p.cpf || "", p.telefone || "", p.transporte || "Com Transporte", "PAGO", dataFormatada]);
     });
 
-    baixarCSV(linhas, "Trilha_Itamaraca_Confirmados_Detalhada");
+    baixarCSV(linhas, "Trilha_Engenho_Amparo_Confirmados_Detalhada");
   };
 
   // Cálculos Financeiros Dinâmicos e de Transporte
