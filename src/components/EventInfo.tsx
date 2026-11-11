@@ -156,7 +156,7 @@ export default function EventInfo({
 
       <section>
         <h2 className="text-2xl font-black uppercase italic mb-6 border-b border-zinc-900 pb-2 text-zinc-500">
-          Investimento - 1º Lote
+          Investimento - 2º Lote
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -171,13 +171,13 @@ export default function EventInfo({
             <div className="space-y-3">
               <div className="flex justify-between items-center border-b border-zinc-700 pb-3">
                 <span className="text-zinc-400 text-sm font-bold">Individual</span>
-                <span className="text-emerald-500 font-black text-xl">R$ 95,00</span>
+                <span className="text-emerald-500 font-black text-xl">R$ 105,00</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 text-sm font-bold">Casadinha</span>
                 <div className="text-right">
-                  <span className="text-emerald-500 font-black text-xl">R$ 90,00</span>
-                  <p className="text-[10px] text-zinc-500">por pessoa • R$ 180,00 o par</p>
+                  <span className="text-emerald-500 font-black text-xl">R$ 100,00</span>
+                  <p className="text-[10px] text-zinc-500">por pessoa • R$ 200,00 o par</p>
                 </div>
               </div>
             </div>
@@ -194,13 +194,13 @@ export default function EventInfo({
             <div className="space-y-3">
               <div className="flex justify-between items-center border-b border-zinc-700 pb-3">
                 <span className="text-zinc-400 text-sm font-bold">Individual</span>
-                <span className="text-emerald-500 font-black text-xl">R$ 65,00</span>
+                <span className="text-emerald-500 font-black text-xl">R$ 75,00</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 text-sm font-bold">Casadinha</span>
                 <div className="text-right">
-                  <span className="text-emerald-500 font-black text-xl">R$ 60,00</span>
-                  <p className="text-[10px] text-zinc-500">por pessoa • R$ 120,00 o par</p>
+                  <span className="text-emerald-500 font-black text-xl">R$ 70,00</span>
+                  <p className="text-[10px] text-zinc-500">por pessoa • R$ 140,00 o par</p>
                 </div>
               </div>
             </div>
@@ -242,8 +242,8 @@ export default function EventInfo({
             <div>
               <h4 className="font-bold text-white uppercase text-sm mb-2 tracking-widest">Investimento</h4>
               <p className="text-sm text-zinc-400 leading-relaxed">
-                <strong className="text-white">Com transporte:</strong> R$ 95,00 individual ou R$ 90,00 por pessoa na casadinha.<br /><br />
-                <strong className="text-white">Transporte próprio:</strong> R$ 65,00 individual ou R$ 60,00 por pessoa na casadinha.
+                <strong className="text-white">Com transporte:</strong> R$ 105,00 individual ou R$ 200,00 por pessoa na casadinha.<br /><br />
+                <strong className="text-white">Transporte próprio:</strong> R$ 75,00 individual ou R$ 140,00 por pessoa na casadinha.
               </p>
             </div>
           </div>

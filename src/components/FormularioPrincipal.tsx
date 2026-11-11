@@ -35,9 +35,9 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
     const avulsos = qtd % 2;          
     
     if (transporte === 'com_transporte') {
-      return (pares * 180) + (avulsos * 95); // Casadinha R$180, Avulso R$95
+      return (pares * 200) + (avulsos * 105); // Casadinha R$200, Avulso R$105
     } else {
-      return (pares * 120) + (avulsos * 65); // Casadinha R$120, Avulso R$65
+      return (pares * 140) + (avulsos * 75); // Casadinha R$140, Avulso R$75
     }
   };
 
@@ -280,7 +280,7 @@ export default function FormularioPrincipal({ vagasOcupadas, verificandoVagas }:
           <div className="text-center mb-10 relative">
             <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white">INSCRIÇÃO</h2>
             <p className="text-emerald-500 text-sm font-bold mt-1 tracking-widest">
-              {tipoTransporte === 'com_transporte' ? 'R$ 95 INDIV. | R$ 180 CASADINHA' : 'R$ 65 INDIV. | R$ 120 CASADINHA'}
+              {tipoTransporte === 'com_transporte' ? 'R$ 105 INDIV. | R$ 200 CASADINHA' : 'R$ 75 INDIV. | R$ 140 CASADINHA'}
             </p>
           </div>
           

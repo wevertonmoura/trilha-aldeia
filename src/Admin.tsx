@@ -235,9 +235,9 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     const avulsos = g.count % 2;
     
     if (g.transporte.includes('Próprio')) {
-      arrecadado += (pares * 120) + (avulsos * 65);
+      arrecadado += (pares * 140) + (avulsos * 75);
     } else {
-      arrecadado += (pares * 180) + (avulsos * 95);
+      arrecadado += (pares * 200) + (avulsos * 105);
     }
   });
   
