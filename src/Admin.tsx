@@ -100,7 +100,7 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
     finally { setExcluindoId(null); }
   };
 
-  // --- Acionamentos de WhatsApp Turbinados (Com Inteligência de Casadinha e Nova Mensagem) ---
+  // --- Acionamentos de WhatsApp Turbinados (Com Inteligência de Casadinha e Convite do Grupo) ---
   const chamarNoWhatsApp = (telefone: string, nome: string, pago: boolean) => {
     let numeroFormatado = (telefone || '').replace(/\D/g, ''); 
     if (numeroFormatado.length === 10 || numeroFormatado.length === 11) numeroFormatado = '55' + numeroFormatado;
@@ -132,12 +132,13 @@ const Admin = ({ senha, formatarMoeda, fecharAdmin }: AdminProps) => {
       }
     }
 
+    const linkGrupo = "https://chat.whatsapp.com/EqSS7oSJKP7LaPkhhqpvNY?s=cl&p=a&iam=2";
     let texto = "";
 
     if (pago) {
-      texto = `Fala, ${nomesParaMensagem}! Tudo bem? 🥾🌲\n\nO pagamento foi aprovado com sucesso e a ${isPlural ? 'vaga de vocês está' : 'sua vaga está'} 100% garantida na *Trilha Engenho Amparo*! ✅\n\n🎟️ *${isPlural ? 'Ingressos' : 'Ingresso'}:*\n${tipoIngresso}\n\n📸 *Queremos fazer o seu banner!*\nPara criarmos o card oficial de "Presença Confirmada" e postar no nosso Instagram, por favor, envie por aqui:\n- Uma foto bem legal (de preferência estilo aventureiro/natureza)\n- O @ do Instagram\n_${isPlural ? '(Como são várias pessoas, mande a foto e o @ de todo mundo, por favor!)' : ''}_\n\n📱 *Sobre o Grupo da Trilha:*\nAinda não criámos o grupo oficial. Mais perto da data do evento, vamos criar um grupo no WhatsApp com todos os confirmados para passar os detalhes finais, horários, o que levar e tirar todas as dúvidas. Pode ficar tranquilo(a) que enviaremos o link de acesso aqui mesmo!\n\nPreparem-se para uma experiência incrível!\nUm grande abraço,\n*Equipe Vem Para Trilha*`;
+      texto = `Fala, ${nomesParaMensagem}! Tudo certo? 🥾🌿\n\nPassando para avisar que a nossa *Trilha Engenho Amparo* já é *neste domingo, dia 29/11*!\n\n🎟️ *${isPlural ? 'Ingressos' : 'Ingresso'}:*\n${tipoIngresso}\n\nEntra no nosso grupo oficial do WhatsApp pelo link abaixo para receber a localização exata do ponto de encontro, horários, lista do que levar e todos os avisos finais:\n👉 ${linkGrupo}\n\n${isPlural ? 'Vocês já podem entrar pelo mesmo link' : 'Te espero lá'}! 🚀\n\n*Equipe Vem Para Trilha*`;
     } else {
-      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura na Trilha Engenho Amparo (29/11) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
+      texto = `Fala, ${nomesParaMensagem}! Vi aqui que a ${isPlural ? 'inscrição de vocês' : 'sua inscrição'} para a nossa aventura na *Trilha Engenho Amparo* (neste domingo, 29/11) ficou pendente. Aconteceu algum erro na hora do Pix? Se precisarem de ajuda ou preferirem transferir direto pela chave, é só me dar um alô aqui para garantirmos ${isPlural ? 'essas vagas' : 'essa vaga'}! 🚀`;
     }
 
     const mensagem = encodeURIComponent(texto);
